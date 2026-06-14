@@ -12,6 +12,7 @@
                         .partner-statement {
                             color: #1f2933;
                             font-size: 12px;
+                            font-family: "DejaVu Sans", "Tahoma", "Arial", sans-serif;
                         }
                         .partner-statement .statement-header {
                             background: #0f4c5c;
@@ -32,6 +33,9 @@
                             padding: 10px 12px;
                             min-height: 62px;
                             border-radius: 4px;
+                        }
+                        .partner-statement .statement-meta p {
+                            margin: 4px 0 0;
                         }
                         .partner-statement .statement-meta strong,
                         .partner-statement .summary-table strong {
@@ -55,6 +59,17 @@
                             width: 100%;
                             border-collapse: collapse;
                             margin-bottom: 10px;
+                            table-layout: fixed;
+                        }
+                        .partner-statement .meta-grid {
+                            border-collapse: separate;
+                            border-spacing: 8px 0;
+                            table-layout: fixed;
+                        }
+                        .partner-statement .meta-grid td {
+                            border: 0;
+                            padding: 0;
+                            width: 25%;
                         }
                         .partner-statement th {
                             background: #dbeafe;
@@ -67,6 +82,18 @@
                             border: 1px solid #d9e2e8;
                             padding: 6px 7px;
                             vertical-align: top;
+                            word-wrap: break-word;
+                            overflow-wrap: break-word;
+                        }
+                        .partner-statement .bidi-text {
+                            unicode-bidi: embed;
+                        }
+                        .partner-statement .amount-cell,
+                        .partner-statement .date-cell,
+                        .partner-statement .code-cell {
+                            direction: ltr;
+                            unicode-bidi: isolate;
+                            white-space: nowrap;
                         }
                         .partner-statement .summary-table td {
                             background: #f8fbfc;
@@ -93,6 +120,10 @@
                         }
                         .partner-statement .text-end {
                             white-space: nowrap;
+                            text-align: right;
+                        }
+                        .partner-statement[dir="rtl"] .text-end {
+                            text-align: left;
                         }
                     </style>
 
@@ -101,49 +132,53 @@
                         <h2 class="statement-title" t-esc="labels['title']"/>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-3">
+                    <table class="meta-grid">
+                        <tbody>
+                            <tr>
+                                <td>
                             <div class="statement-meta">
                                 <strong t-esc="labels['company']"/>
-                                <p t-esc="res_company.name"/>
+                                <p class="bidi-text" dir="auto" t-esc="res_company.name"/>
                             </div>
-                        </div>
-                        <div class="col-3">
+                                </td>
+                                <td>
                             <div class="statement-meta">
                                 <t t-if="data['form']['date_from']">
                                     <strong t-esc="labels['date_from']"/>
-                                    <span t-esc="data['form']['date_from']"/>
+                                    <span class="date-cell" t-esc="data['form']['date_from']"/>
                                     <br/>
                                 </t>
                                 <t t-if="data['form']['date_to']">
                                     <strong t-esc="labels['date_to']"/>
-                                    <span t-esc="data['form']['date_to']"/>
+                                    <span class="date-cell" t-esc="data['form']['date_to']"/>
                                 </t>
                             </div>
-                        </div>
-                        <div class="col-3">
+                                </td>
+                                <td>
                             <div class="statement-meta">
                                 <strong t-esc="labels['partners']"/>
                                 <p t-if="data['form']['result_selection'] == 'customer'" t-esc="labels['customers']"/>
                                 <p t-if="data['form']['result_selection'] == 'supplier'" t-esc="labels['vendors']"/>
                                 <p t-if="data['form']['result_selection'] == 'customer_supplier'" t-esc="labels['customers_vendors']"/>
                             </div>
-                        </div>
-                        <div class="col-3">
+                                </td>
+                                <td>
                             <div class="statement-meta">
                                 <strong t-esc="labels['target_moves']"/>
                                 <p t-if="data['form']['target_move'] == 'all'" t-esc="labels['all_entries']"/>
                                 <p t-if="data['form']['target_move'] == 'posted'" t-esc="labels['posted_entries']"/>
                             </div>
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <t t-foreach="docs" t-as="partner">
                         <t t-set="statement" t-value="statements[partner.id]"/>
                         <h4 class="partner-name">
                             <span t-esc="partner.ref"/>
                             <t t-if="partner.ref"> - </t>
-                            <span t-esc="partner.name"/>
+                            <span class="bidi-text" dir="auto" t-esc="partner.name"/>
                         </h4>
 
                         <table class="table table-sm table-bordered summary-table">
@@ -151,12 +186,12 @@
                                 <tr>
                                     <td><strong t-esc="labels['opening_balance']"/></td>
                                     <td class="text-end">
-                                        <span t-esc="statement['opening_balance']"
+                                        <span class="amount-cell" t-esc="statement['opening_balance']"
                                               t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                     </td>
                                     <td><strong t-esc="labels['ending_balance']"/></td>
                                     <td class="text-end">
-                                        <span t-esc="statement['ending_balance']"
+                                        <span class="amount-cell" t-esc="statement['ending_balance']"
                                               t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                     </td>
                                 </tr>
@@ -171,38 +206,38 @@
                             <table class="table table-sm table-reports mt-2 movement-table">
                                 <thead>
                                     <tr>
-                                        <th t-esc="labels['movement']"/>
-                                        <th t-esc="labels['date']"/>
-                                        <th t-esc="labels['journal']"/>
-                                        <th t-esc="labels['account']"/>
-                                        <th class="text-end" t-esc="labels['debit']"/>
-                                        <th class="text-end" t-esc="labels['credit']"/>
-                                        <th class="text-end" t-esc="labels['balance_after']"/>
+                                        <th style="width: 25%;" t-esc="labels['movement']"/>
+                                        <th style="width: 12%;" t-esc="labels['date']"/>
+                                        <th style="width: 9%;" t-esc="labels['journal']"/>
+                                        <th style="width: 22%;" t-esc="labels['account']"/>
+                                        <th class="text-end" style="width: 10%;" t-esc="labels['debit']"/>
+                                        <th class="text-end" style="width: 10%;" t-esc="labels['credit']"/>
+                                        <th class="text-end" style="width: 12%;" t-esc="labels['balance_after']"/>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <strong t-if="row['invoice']" t-esc="row['invoice'].name"/>
-                                            <strong t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
+                                            <strong class="code-cell" t-if="row['invoice']" t-esc="row['invoice'].name"/>
+                                            <strong class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
                                             <br t-if="row['line'].ref"/>
-                                            <span t-if="row['line'].ref" t-esc="row['line'].ref"/>
+                                            <span class="bidi-text" dir="auto" t-if="row['line'].ref" t-esc="row['line'].ref"/>
                                             <br/>
-                                            <span t-esc="row['line'].name"/>
+                                            <span class="bidi-text" dir="auto" t-esc="row['line'].name"/>
                                         </td>
-                                        <td><span t-esc="row['date']"/></td>
-                                        <td><span t-esc="row['line'].journal_id.code"/></td>
-                                        <td><span t-esc="row['line'].account_id.display_name"/></td>
+                                        <td class="date-cell"><span t-esc="row['date']"/></td>
+                                        <td class="code-cell"><span t-esc="row['line'].journal_id.code"/></td>
+                                        <td><span class="bidi-text" dir="auto" t-esc="row['line'].account_id.display_name"/></td>
                                         <td class="text-end">
-                                            <span t-esc="row['debit']"
+                                            <span class="amount-cell" t-esc="row['debit']"
                                                   t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                         </td>
                                         <td class="text-end">
-                                            <span t-esc="row['credit']"
+                                            <span class="amount-cell" t-esc="row['credit']"
                                                   t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                         </td>
                                         <td class="text-end">
-                                            <span t-esc="row['invoice_balance']"
+                                            <span class="amount-cell" t-esc="row['invoice_balance']"
                                                   t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                         </td>
                                     </tr>
@@ -215,16 +250,16 @@
                                         <tr>
                                             <td><strong t-esc="labels['invoice_total']"/></td>
                                             <td class="text-end">
-                                                <span t-esc="row['invoice'].amount_total"
+                                                <span class="amount-cell" t-esc="row['invoice'].amount_total"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
                                             </td>
                                             <td><strong t-esc="labels['residual']"/></td>
                                             <td class="text-end">
-                                                <span t-esc="row['invoice'].amount_residual"
+                                                <span class="amount-cell" t-esc="row['invoice'].amount_residual"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
                                             </td>
                                             <td><strong t-esc="labels['payment_status']"/></td>
-                                            <td><span t-esc="row['invoice'].payment_state"/></td>
+                                            <td><span class="bidi-text" dir="auto" t-esc="row['invoice'].payment_state"/></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -244,16 +279,16 @@
                                             <td class="empty-line" colspan="6" t-esc="labels['no_invoice_lines']"/>
                                         </tr>
                                         <tr t-foreach="row['lines']" t-as="line">
-                                            <td><span t-esc="line['name']"/></td>
-                                            <td class="text-end"><span t-esc="line['quantity']"/></td>
-                                            <td><span t-esc="line['uom']"/></td>
+                                            <td><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
+                                            <td class="text-end"><span class="amount-cell" t-esc="line['quantity']"/></td>
+                                            <td><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
                                             <td class="text-end">
-                                                <span t-esc="line['price_unit']"
+                                                <span class="amount-cell" t-esc="line['price_unit']"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
                                             </td>
-                                            <td class="text-end"><span t-esc="line['discount']"/></td>
+                                            <td class="text-end"><span class="amount-cell" t-esc="line['discount']"/></td>
                                             <td class="text-end">
-                                                <span t-esc="line['subtotal']"
+                                                <span class="amount-cell" t-esc="line['subtotal']"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
                                             </td>
                                         </tr>
