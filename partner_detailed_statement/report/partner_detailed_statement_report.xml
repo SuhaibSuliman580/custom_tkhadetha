@@ -95,6 +95,25 @@
                             unicode-bidi: isolate;
                             white-space: nowrap;
                         }
+                        .partner-statement .report-table {
+                            direction: ltr;
+                        }
+                        .partner-statement .report-table th {
+                            text-align: center;
+                        }
+                        .partner-statement .report-table .text-label {
+                            direction: rtl;
+                            text-align: right;
+                        }
+                        .partner-statement .account-code {
+                            direction: ltr;
+                            unicode-bidi: embed;
+                            white-space: nowrap;
+                        }
+                        .partner-statement .account-name {
+                            direction: rtl;
+                            unicode-bidi: embed;
+                        }
                         .partner-statement .summary-table td {
                             background: #f8fbfc;
                             font-size: 13px;
@@ -121,9 +140,6 @@
                         .partner-statement .text-end {
                             white-space: nowrap;
                             text-align: right;
-                        }
-                        .partner-statement[dir="rtl"] .text-end {
-                            text-align: left;
                         }
                     </style>
 
@@ -181,7 +197,7 @@
                             <span class="bidi-text" dir="auto" t-esc="partner.name"/>
                         </h4>
 
-                        <table class="table table-sm table-bordered summary-table">
+                        <table class="table table-sm table-bordered summary-table report-table">
                             <tbody>
                                 <tr>
                                     <td><strong t-esc="labels['opening_balance']"/></td>
@@ -203,7 +219,7 @@
                         </t>
 
                         <t t-foreach="statement['rows']" t-as="row">
-                            <table class="table table-sm table-reports mt-2 movement-table">
+                            <table class="table table-sm table-reports mt-2 movement-table report-table">
                                 <thead>
                                     <tr>
                                         <th style="width: 25%;" t-esc="labels['movement']"/>
@@ -217,7 +233,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
+                                        <td class="text-label">
                                             <strong class="code-cell" t-if="row['invoice']" t-esc="row['invoice'].name"/>
                                             <strong class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
                                             <br t-if="row['line'].ref"/>
@@ -227,7 +243,11 @@
                                         </td>
                                         <td class="date-cell"><span t-esc="row['date']"/></td>
                                         <td class="code-cell"><span t-esc="row['line'].journal_id.code"/></td>
-                                        <td><span class="bidi-text" dir="auto" t-esc="row['line'].account_id.display_name"/></td>
+                                        <td>
+                                            <span class="account-code" t-esc="row['line'].account_id.code"/>
+                                            <t t-if="row['line'].account_id.code and row['line'].account_id.name"> - </t>
+                                            <span class="account-name" t-esc="row['line'].account_id.name"/>
+                                        </td>
                                         <td class="text-end">
                                             <span class="amount-cell" t-esc="row['debit']"
                                                   t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
@@ -245,7 +265,7 @@
                             </table>
 
                             <t t-if="row['invoice'] and data['form']['include_invoice_lines']">
-                                <table class="table table-sm table-bordered invoice-summary">
+                                <table class="table table-sm table-bordered invoice-summary report-table">
                                     <tbody>
                                         <tr>
                                             <td><strong t-esc="labels['invoice_total']"/></td>
@@ -263,7 +283,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <table class="table table-sm table-bordered lines-table">
+                                <table class="table table-sm table-bordered lines-table report-table">
                                     <thead>
                                         <tr>
                                             <th t-esc="labels['product_service']"/>
@@ -279,9 +299,9 @@
                                             <td class="empty-line" colspan="6" t-esc="labels['no_invoice_lines']"/>
                                         </tr>
                                         <tr t-foreach="row['lines']" t-as="line">
-                                            <td><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
+                                            <td class="text-label"><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
                                             <td class="text-end"><span class="amount-cell" t-esc="line['quantity']"/></td>
-                                            <td><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
+                                            <td class="text-label"><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
                                             <td class="text-end">
                                                 <span class="amount-cell" t-esc="line['price_unit']"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
@@ -297,7 +317,7 @@
                             </t>
 
                             <t t-if="data['form']['include_payments'] and row['payments']">
-                                <table class="table table-sm table-bordered lines-table">
+                                <table class="table table-sm table-bordered lines-table report-table">
                                     <thead>
                                         <tr>
                                             <th t-esc="labels['payment_settlement']"/>
