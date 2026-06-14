@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_report_partner_detailed_statement,access.account.report.partner.detailed.statement,model_account_report_partner_detailed_statement,account.group_account_invoice,1,1,1,1
+access_account_report_partner_detailed_statement_manager,access.account.report.partner.detailed.statement.manager,model_account_report_partner_detailed_statement,account.group_account_manager,1,1,1,1

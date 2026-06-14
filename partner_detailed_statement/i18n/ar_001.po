@@ -1,0 +1,177 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_detailed_statement
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-14 00:00+0000\n"
+"PO-Revision-Date: 2026-06-14 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Arabic\n"
+"Language: ar_001\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#. module: partner_detailed_statement
+msgid "Detailed Partner Statement"
+msgstr "كشف تفصيلي للعملاء والموردين"
+
+#. module: partner_detailed_statement
+msgid "Detailed Partner Statement Report"
+msgstr "تقرير كشف تفصيلي للعملاء والموردين"
+
+#. module: partner_detailed_statement
+msgid "Detailed customer and vendor statement with invoices, lines, payments, and running balance"
+msgstr "كشف تفصيلي للعملاء والموردين مع الفواتير والبنود والدفعات والرصيد الجاري"
+
+#. module: partner_detailed_statement
+msgid "Show Invoice Lines"
+msgstr "إظهار بنود الفاتورة"
+
+#. module: partner_detailed_statement
+msgid "Show Linked Payments"
+msgstr "إظهار الدفعات المرتبطة"
+
+#. module: partner_detailed_statement
+msgid "Detailed Statement"
+msgstr "كشف تفصيلي"
+
+#. module: partner_detailed_statement
+msgid "Company:"
+msgstr "الشركة:"
+
+#. module: partner_detailed_statement
+msgid "Date from:"
+msgstr "من تاريخ:"
+
+#. module: partner_detailed_statement
+msgid "Date to:"
+msgstr "إلى تاريخ:"
+
+#. module: partner_detailed_statement
+msgid "Partners:"
+msgstr "الشركاء:"
+
+#. module: partner_detailed_statement
+msgid "Customers"
+msgstr "العملاء"
+
+#. module: partner_detailed_statement
+msgid "Vendors"
+msgstr "الموردون"
+
+#. module: partner_detailed_statement
+msgid "Customers and Vendors"
+msgstr "العملاء والموردون"
+
+#. module: partner_detailed_statement
+msgid "Target Moves:"
+msgstr "حالة القيود:"
+
+#. module: partner_detailed_statement
+msgid "All Entries"
+msgstr "كل القيود"
+
+#. module: partner_detailed_statement
+msgid "Posted Entries"
+msgstr "القيود المرحلة"
+
+#. module: partner_detailed_statement
+msgid "Opening Balance"
+msgstr "الرصيد الافتتاحي"
+
+#. module: partner_detailed_statement
+msgid "Ending Balance"
+msgstr "الرصيد الختامي"
+
+#. module: partner_detailed_statement
+msgid "No invoice or payment movements found for the selected filters."
+msgstr "لا توجد حركات فواتير أو دفعات حسب عوامل التصفية المحددة."
+
+#. module: partner_detailed_statement
+msgid "Movement"
+msgstr "الحركة"
+
+#. module: partner_detailed_statement
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: partner_detailed_statement
+msgid "Journal"
+msgstr "اليومية"
+
+#. module: partner_detailed_statement
+msgid "Account"
+msgstr "الحساب"
+
+#. module: partner_detailed_statement
+msgid "Debit"
+msgstr "مدين"
+
+#. module: partner_detailed_statement
+msgid "Credit"
+msgstr "دائن"
+
+#. module: partner_detailed_statement
+msgid "Balance After"
+msgstr "الرصيد بعد الحركة"
+
+#. module: partner_detailed_statement
+msgid "Invoice Total"
+msgstr "إجمالي الفاتورة"
+
+#. module: partner_detailed_statement
+msgid "Residual"
+msgstr "المتبقي"
+
+#. module: partner_detailed_statement
+msgid "Payment Status"
+msgstr "حالة السداد"
+
+#. module: partner_detailed_statement
+msgid "Product / Service"
+msgstr "المنتج / الخدمة"
+
+#. module: partner_detailed_statement
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: partner_detailed_statement
+msgid "Unit"
+msgstr "الوحدة"
+
+#. module: partner_detailed_statement
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+#. module: partner_detailed_statement
+msgid "Discount %"
+msgstr "نسبة الخصم"
+
+#. module: partner_detailed_statement
+msgid "Subtotal"
+msgstr "الإجمالي الفرعي"
+
+#. module: partner_detailed_statement
+msgid "No invoice lines found."
+msgstr "لا توجد بنود للفاتورة."
+
+#. module: partner_detailed_statement
+msgid "Payment / Settlement"
+msgstr "دفعة / تسوية"
+
+#. module: partner_detailed_statement
+msgid "Reference"
+msgstr "المرجع"
+
+#. module: partner_detailed_statement
+msgid "Amount"
+msgstr "المبلغ"
+
+#. module: partner_detailed_statement
+msgid "Credit / Bill Adjustment"
+msgstr "تسوية إشعار دائن / فاتورة مورد"

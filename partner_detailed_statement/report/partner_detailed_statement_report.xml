@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="statement">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+                <div class="page" t-att-dir="'rtl' if is_arabic else 'ltr'">
+                    <style>
+                        .partner-statement {
+                            color: #1f2933;
+                            font-size: 12px;
+                        }
+                        .partner-statement .statement-header {
+                            background: #0f4c5c;
+                            color: #ffffff;
+                            padding: 18px 20px;
+                            border-radius: 6px;
+                            margin-bottom: 14px;
+                        }
+                        .partner-statement .statement-title {
+                            margin: 0;
+                            font-size: 26px;
+                            font-weight: 700;
+                            color: #ffffff;
+                        }
+                        .partner-statement .statement-meta {
+                            border: 1px solid #d7e3e7;
+                            background: #f6fafb;
+                            padding: 10px 12px;
+                            min-height: 62px;
+                            border-radius: 4px;
+                        }
+                        .partner-statement .statement-meta strong,
+                        .partner-statement .summary-table strong {
+                            color: #0f4c5c;
+                        }
+                        .partner-statement .partner-name {
+                            margin: 16px 0 8px;
+                            padding: 8px 12px;
+                            color: #0f4c5c;
+                            background: #eaf4f6;
+                            border-left: 4px solid #0f4c5c;
+                            border-radius: 4px;
+                            font-size: 18px;
+                            font-weight: 700;
+                        }
+                        .partner-statement[dir="rtl"] .partner-name {
+                            border-left: 0;
+                            border-right: 4px solid #0f4c5c;
+                        }
+                        .partner-statement table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 10px;
+                        }
+                        .partner-statement th {
+                            background: #dbeafe;
+                            color: #17324d;
+                            border: 1px solid #b9d2ea;
+                            padding: 6px 7px;
+                            font-weight: 700;
+                        }
+                        .partner-statement td {
+                            border: 1px solid #d9e2e8;
+                            padding: 6px 7px;
+                            vertical-align: top;
+                        }
+                        .partner-statement .summary-table td {
+                            background: #f8fbfc;
+                            font-size: 13px;
+                        }
+                        .partner-statement .movement-table {
+                            border-top: 3px solid #0f4c5c;
+                            margin-top: 13px;
+                        }
+                        .partner-statement .movement-table tbody tr {
+                            background: #ffffff;
+                        }
+                        .partner-statement .invoice-summary td {
+                            background: #f0f9ff;
+                        }
+                        .partner-statement .lines-table th {
+                            background: #ecfdf5;
+                            border-color: #badbcc;
+                            color: #14532d;
+                        }
+                        .partner-statement .empty-line {
+                            color: #6b7280;
+                            font-style: italic;
+                        }
+                        .partner-statement .text-end {
+                            white-space: nowrap;
+                        }
+                    </style>
+
+                    <div class="partner-statement" t-att-dir="'rtl' if is_arabic else 'ltr'">
+                    <div class="statement-header">
+                        <h2 class="statement-title" t-esc="labels['title']"/>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <div class="statement-meta">
+                                <strong t-esc="labels['company']"/>
+                                <p t-esc="res_company.name"/>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="statement-meta">
+                                <t t-if="data['form']['date_from']">
+                                    <strong t-esc="labels['date_from']"/>
+                                    <span t-esc="data['form']['date_from']"/>
+                                    <br/>
+                                </t>
+                                <t t-if="data['form']['date_to']">
+                                    <strong t-esc="labels['date_to']"/>
+                                    <span t-esc="data['form']['date_to']"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="statement-meta">
+                                <strong t-esc="labels['partners']"/>
+                                <p t-if="data['form']['result_selection'] == 'customer'" t-esc="labels['customers']"/>
+                                <p t-if="data['form']['result_selection'] == 'supplier'" t-esc="labels['vendors']"/>
+                                <p t-if="data['form']['result_selection'] == 'customer_supplier'" t-esc="labels['customers_vendors']"/>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="statement-meta">
+                                <strong t-esc="labels['target_moves']"/>
+                                <p t-if="data['form']['target_move'] == 'all'" t-esc="labels['all_entries']"/>
+                                <p t-if="data['form']['target_move'] == 'posted'" t-esc="labels['posted_entries']"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-foreach="docs" t-as="partner">
+                        <t t-set="statement" t-value="statements[partner.id]"/>
+                        <h4 class="partner-name">
+                            <span t-esc="partner.ref"/>
+                            <t t-if="partner.ref"> - </t>
+                            <span t-esc="partner.name"/>
+                        </h4>
+
+                        <table class="table table-sm table-bordered summary-table">
+                            <tbody>
+                                <tr>
+                                    <td><strong t-esc="labels['opening_balance']"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="statement['opening_balance']"
+                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </td>
+                                    <td><strong t-esc="labels['ending_balance']"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="statement['ending_balance']"
+                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="not statement['rows']">
+                            <p t-esc="labels['no_movements']"/>
+                        </t>
+
+                        <t t-foreach="statement['rows']" t-as="row">
+                            <table class="table table-sm table-reports mt-2 movement-table">
+                                <thead>
+                                    <tr>
+                                        <th t-esc="labels['movement']"/>
+                                        <th t-esc="labels['date']"/>
+                                        <th t-esc="labels['journal']"/>
+                                        <th t-esc="labels['account']"/>
+                                        <th class="text-end" t-esc="labels['debit']"/>
+                                        <th class="text-end" t-esc="labels['credit']"/>
+                                        <th class="text-end" t-esc="labels['balance_after']"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong t-if="row['invoice']" t-esc="row['invoice'].name"/>
+                                            <strong t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
+                                            <br t-if="row['line'].ref"/>
+                                            <span t-if="row['line'].ref" t-esc="row['line'].ref"/>
+                                            <br/>
+                                            <span t-esc="row['line'].name"/>
+                                        </td>
+                                        <td><span t-esc="row['date']"/></td>
+                                        <td><span t-esc="row['line'].journal_id.code"/></td>
+                                        <td><span t-esc="row['line'].account_id.display_name"/></td>
+                                        <td class="text-end">
+                                            <span t-esc="row['debit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-esc="row['credit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-esc="row['invoice_balance']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <t t-if="row['invoice'] and data['form']['include_invoice_lines']">
+                                <table class="table table-sm table-bordered invoice-summary">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong t-esc="labels['invoice_total']"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="row['invoice'].amount_total"
+                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                            </td>
+                                            <td><strong t-esc="labels['residual']"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="row['invoice'].amount_residual"
+                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                            </td>
+                                            <td><strong t-esc="labels['payment_status']"/></td>
+                                            <td><span t-esc="row['invoice'].payment_state"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-sm table-bordered lines-table">
+                                    <thead>
+                                        <tr>
+                                            <th t-esc="labels['product_service']"/>
+                                            <th class="text-end" t-esc="labels['quantity']"/>
+                                            <th t-esc="labels['unit']"/>
+                                            <th class="text-end" t-esc="labels['unit_price']"/>
+                                            <th class="text-end" t-esc="labels['discount']"/>
+                                            <th class="text-end" t-esc="labels['subtotal']"/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-if="not row['lines']">
+                                            <td class="empty-line" colspan="6" t-esc="labels['no_invoice_lines']"/>
+                                        </tr>
+                                        <tr t-foreach="row['lines']" t-as="line">
+                                            <td><span t-esc="line['name']"/></td>
+                                            <td class="text-end"><span t-esc="line['quantity']"/></td>
+                                            <td><span t-esc="line['uom']"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="line['price_unit']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                            </td>
+                                            <td class="text-end"><span t-esc="line['discount']"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="line['subtotal']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <t t-if="data['form']['include_payments'] and row['payments']">
+                                <table class="table table-sm table-bordered lines-table">
+                                    <thead>
+                                        <tr>
+                                            <th t-esc="labels['payment_settlement']"/>
+                                            <th t-esc="labels['date']"/>
+                                            <th t-esc="labels['journal']"/>
+                                            <th t-esc="labels['reference']"/>
+                                            <th class="text-end" t-esc="labels['amount']"/>
+                                            <th class="text-end" t-esc="labels['balance_after']"/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="row['payments']" t-as="payment">
+                                            <td><span t-esc="payment['name']"/></td>
+                                            <td><span t-esc="payment['date']"/></td>
+                                            <td><span t-esc="payment['journal']"/></td>
+                                            <td><span t-esc="payment['ref']"/></td>
+                                            <td class="text-end">
+                                                <span t-esc="payment['amount']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-esc="payment['balance']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+                        <div style="page-break-after: always;"/>
+                    </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
