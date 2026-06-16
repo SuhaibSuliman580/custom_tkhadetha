@@ -16,6 +16,9 @@
                     <field name="include_invoice_lines"/>
                     <field name="include_payments"/>
                 </xpath>
+                <xpath expr="//footer/button[@name='check_report']" position="after">
+                    <button name="action_xlsx" string="Excel" type="object" class="btn-secondary"/>
+                </xpath>
             </data>
         </field>
     </record>
