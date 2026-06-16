@@ -124,6 +124,28 @@
                         .partner-statement .movement-card-body {
                             padding: 8px 10px 2px;
                         }
+                        .partner-statement .movement-note {
+                            border: 1px solid #e0ebef;
+                            background: #ffffff;
+                            padding: 6px 8px;
+                            margin: 0 0 8px;
+                            text-align: right;
+                            direction: rtl;
+                        }
+                        .partner-statement .movement-note .note-ref {
+                            display: block;
+                            direction: ltr;
+                            unicode-bidi: embed;
+                            text-align: right;
+                            font-weight: 700;
+                        }
+                        .partner-statement .movement-note .note-name {
+                            display: block;
+                            direction: rtl;
+                            unicode-bidi: embed;
+                            text-align: right;
+                            margin-top: 3px;
+                        }
                         .partner-statement .kv-table {
                             table-layout: fixed;
                             margin-bottom: 8px;
@@ -148,6 +170,14 @@
                             color: #14532d;
                             font-weight: 700;
                             margin-bottom: 6px;
+                        }
+                        .partner-statement .product-name {
+                            display: block;
+                            direction: ltr;
+                            unicode-bidi: embed;
+                            text-align: right;
+                            white-space: normal;
+                            word-break: normal;
                         }
                         .partner-statement .mini-kv {
                             table-layout: fixed;
@@ -261,11 +291,10 @@
                                         <span class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
                                     </div>
                                     <div class="movement-card-body">
-                                        <p class="bidi-text" dir="auto">
-                                            <span t-if="row['line'].ref" t-esc="row['line'].ref"/>
-                                            <t t-if="row['line'].ref and row['line'].name"> - </t>
-                                            <span t-esc="row['line'].name"/>
-                                        </p>
+                                        <div class="movement-note" t-if="row['line'].ref or row['line'].name">
+                                            <span class="note-ref" t-if="row['line'].ref" t-esc="row['line'].ref"/>
+                                            <span class="note-name" t-if="row['line'].name" t-esc="row['line'].name"/>
+                                        </div>
                                         <table class="kv-table">
                                             <tbody>
                                                 <tr>
@@ -328,7 +357,7 @@
                                             <div t-if="not row['lines']" class="empty-line" t-esc="labels['no_invoice_lines']"/>
                                             <div t-foreach="row['lines']" t-as="line" class="line-card">
                                                 <div class="line-name">
-                                                    <span class="bidi-text" dir="rtl" t-esc="line['name']"/>
+                                                    <span class="product-name" t-esc="line['name']"/>
                                                 </div>
                                                 <table class="mini-kv">
                                                     <tbody>
