@@ -58,52 +58,64 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
         sheet = workbook.add_worksheet(labels['title'][:31])
         if is_arabic:
             sheet.right_to_left()
+        sheet.set_landscape()
+        sheet.fit_to_pages(1, 0)
 
         title_format = workbook.add_format({
-            'bold': True, 'font_size': 16, 'font_color': 'white',
-            'bg_color': '#0F4C5C', 'align': 'center', 'valign': 'vcenter'
+            'bold': True, 'font_size': 18, 'font_color': 'white',
+            'bg_color': '#0F4C5C', 'align': 'center', 'valign': 'vcenter',
+            'border': 1
         })
         meta_label = workbook.add_format({
             'bold': True, 'font_color': '#0F4C5C', 'bg_color': '#F6FAFB',
-            'border': 1, 'align': 'right' if is_arabic else 'left'
+            'border': 1, 'align': 'right' if is_arabic else 'left',
+            'valign': 'vcenter'
         })
         meta_value = workbook.add_format({
             'bg_color': '#F6FAFB', 'border': 1,
-            'align': 'right' if is_arabic else 'left'
+            'align': 'right' if is_arabic else 'left', 'valign': 'vcenter'
         })
         partner_format = workbook.add_format({
             'bold': True, 'font_size': 13, 'font_color': '#0F4C5C',
             'bg_color': '#EAF4F6', 'border': 1,
-            'align': 'right' if is_arabic else 'left'
+            'align': 'right' if is_arabic else 'left', 'valign': 'vcenter'
         })
         header_format = workbook.add_format({
             'bold': True, 'font_color': '#17324D', 'bg_color': '#DBEAFE',
-            'border': 1, 'align': 'center', 'valign': 'vcenter'
+            'border': 1, 'align': 'center', 'valign': 'vcenter',
+            'top': 2, 'bottom': 1
         })
         line_header_format = workbook.add_format({
             'bold': True, 'font_color': '#14532D', 'bg_color': '#ECFDF5',
-            'border': 1, 'align': 'center'
+            'border': 1, 'align': 'center', 'valign': 'vcenter'
         })
         text_format = workbook.add_format({
-            'border': 1, 'align': 'right' if is_arabic else 'left', 'valign': 'top'
+            'border': 1, 'align': 'right' if is_arabic else 'left',
+            'valign': 'vcenter', 'text_wrap': True
         })
         date_format = workbook.add_format({'border': 1, 'align': 'center', 'num_format': 'yyyy-mm-dd'})
-        money_format = workbook.add_format({'border': 1, 'align': 'right', 'num_format': '#,##0.00'})
+        currency_symbol = self.env.company.currency_id.symbol or ''
+        money_format = workbook.add_format({
+            'border': 1, 'align': 'right',
+            'num_format': '#,##0.00%s' % (' "%s"' % currency_symbol if currency_symbol else '')
+        })
         subtotal_format = workbook.add_format({
-            'border': 1, 'align': 'right', 'num_format': '#,##0.00',
+            'border': 1, 'align': 'right',
+            'num_format': '#,##0.00%s' % (' "%s"' % currency_symbol if currency_symbol else ''),
             'bg_color': '#F0F9FF'
         })
         empty_format = workbook.add_format({'italic': True, 'font_color': '#6B7280', 'border': 1})
 
-        sheet.set_column('A:A', 28)
-        sheet.set_column('B:B', 14)
-        sheet.set_column('C:C', 13)
+        sheet.set_column('A:A', 34)
+        sheet.set_column('B:B', 13)
+        sheet.set_column('C:C', 15)
         sheet.set_column('D:D', 28)
         sheet.set_column('E:G', 15)
-        sheet.set_column('H:H', 18)
+        sheet.set_column('H:H', 14)
 
         row = 0
         sheet.merge_range(row, 0, row + 1, 7, labels['title'], title_format)
+        sheet.set_row(row, 28)
         row += 3
 
         company = data['form']['company_id'][1] if data['form'].get('company_id') else self.env.company.name
@@ -126,12 +138,13 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
             sheet.write(row, col, label, meta_label)
             sheet.write(row + 1, col, value, meta_value)
             col += 1
-        row += 3
+        row += 4
 
         for partner in partners:
             statement = report._partner_statement(data, partner)
             partner_name = '%s%s%s' % (partner.ref or '', ' - ' if partner.ref else '', partner.name or '')
             sheet.merge_range(row, 0, row, 7, partner_name, partner_format)
+            sheet.set_row(row, 22)
             row += 1
 
             sheet.write(row, 0, labels['opening_balance'], meta_label)
@@ -166,14 +179,6 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
 
                 invoice = item['invoice']
                 if invoice and data['form'].get('include_invoice_lines'):
-                    sheet.write(row, 0, labels['invoice_total'], meta_label)
-                    sheet.write_number(row, 1, invoice.amount_total, subtotal_format)
-                    sheet.write(row, 2, labels['residual'], meta_label)
-                    sheet.write_number(row, 3, invoice.amount_residual, subtotal_format)
-                    sheet.write(row, 4, labels['payment_status'], meta_label)
-                    sheet.write(row, 5, invoice.payment_state or '', meta_value)
-                    row += 1
-
                     line_headers = [
                         labels['product_service'], labels['quantity'], labels['unit'],
                         labels['unit_price'], labels['discount'], labels['subtotal']
@@ -193,8 +198,7 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
                         sheet.write_number(row, 4, invoice_line['discount'], money_format)
                         sheet.write_number(row, 5, invoice_line['subtotal'], money_format)
                         row += 1
-                row += 1
-            row += 1
+            row += 2
 
         workbook.close()
         output.seek(0)
