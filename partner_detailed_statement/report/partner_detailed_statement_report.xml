@@ -106,6 +106,37 @@
                         .partner-statement .movement-table tbody tr {
                             background: #ffffff;
                         }
+                        .partner-statement .movement-card {
+                            border: 1px solid #cfe0e6;
+                            border-top: 3px solid #0f4c5c;
+                            border-radius: 5px;
+                            margin: 13px 0 10px;
+                            page-break-inside: avoid;
+                            background: #ffffff;
+                        }
+                        .partner-statement .movement-card-title {
+                            background: #eaf4f6;
+                            color: #0f4c5c;
+                            padding: 8px 10px;
+                            font-size: 14px;
+                            font-weight: 700;
+                        }
+                        .partner-statement .movement-card-body {
+                            padding: 8px 10px 2px;
+                        }
+                        .partner-statement .kv-table {
+                            table-layout: fixed;
+                            margin-bottom: 8px;
+                        }
+                        .partner-statement .kv-table td {
+                            background: #f8fbfc;
+                            width: 25%;
+                        }
+                        .partner-statement .kv-table strong {
+                            color: #0f4c5c;
+                            display: block;
+                            margin-bottom: 3px;
+                        }
                         .partner-statement .invoice-summary td {
                             background: #f0f9ff;
                         }
@@ -203,6 +234,110 @@
                         </t>
 
                         <t t-foreach="statement['rows']" t-as="row">
+                            <t t-if="is_arabic">
+                                <div class="movement-card">
+                                    <div class="movement-card-title">
+                                        <span class="code-cell" t-if="row['invoice']" t-esc="row['invoice'].name"/>
+                                        <span class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
+                                    </div>
+                                    <div class="movement-card-body">
+                                        <p class="bidi-text" dir="auto">
+                                            <span t-if="row['line'].ref" t-esc="row['line'].ref"/>
+                                            <t t-if="row['line'].ref and row['line'].name"> - </t>
+                                            <span t-esc="row['line'].name"/>
+                                        </p>
+                                        <table class="kv-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <strong t-esc="labels['date']"/>
+                                                        <span class="date-cell" t-esc="row['date']"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong t-esc="labels['journal']"/>
+                                                        <span class="code-cell" t-esc="row['line'].journal_id.code"/>
+                                                    </td>
+                                                    <td colspan="2">
+                                                        <strong t-esc="labels['account']"/>
+                                                        <span class="bidi-text" dir="auto" t-esc="row['line'].account_id.display_name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong t-esc="labels['debit']"/>
+                                                        <span class="amount-cell" t-esc="row['debit']"
+                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong t-esc="labels['credit']"/>
+                                                        <span class="amount-cell" t-esc="row['credit']"
+                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                    </td>
+                                                    <td colspan="2">
+                                                        <strong t-esc="labels['balance_after']"/>
+                                                        <span class="amount-cell" t-esc="row['invoice_balance']"
+                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <t t-if="row['invoice'] and data['form']['include_invoice_lines']">
+                                            <table class="kv-table invoice-summary">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <strong t-esc="labels['invoice_total']"/>
+                                                            <span class="amount-cell" t-esc="row['invoice'].amount_total"
+                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                        </td>
+                                                        <td>
+                                                            <strong t-esc="labels['residual']"/>
+                                                            <span class="amount-cell" t-esc="row['invoice'].amount_residual"
+                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <strong t-esc="labels['payment_status']"/>
+                                                            <span class="bidi-text" dir="auto" t-esc="row['invoice'].payment_state"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table table-sm table-bordered lines-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 40%;" t-esc="labels['product_service']"/>
+                                                        <th style="width: 15%;" t-esc="labels['quantity']"/>
+                                                        <th style="width: 15%;" t-esc="labels['unit']"/>
+                                                        <th class="text-end" style="width: 15%;" t-esc="labels['unit_price']"/>
+                                                        <th class="text-end" style="width: 15%;" t-esc="labels['subtotal']"/>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-if="not row['lines']">
+                                                        <td class="empty-line" colspan="5" t-esc="labels['no_invoice_lines']"/>
+                                                    </tr>
+                                                    <tr t-foreach="row['lines']" t-as="line">
+                                                        <td><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
+                                                        <td class="text-end"><span class="amount-cell" t-esc="line['quantity']"/></td>
+                                                        <td><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
+                                                        <td class="text-end">
+                                                            <span class="amount-cell" t-esc="line['price_unit']"
+                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <span class="amount-cell" t-esc="line['subtotal']"
+                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <t t-if="not is_arabic">
                             <table class="table table-sm table-reports mt-2 movement-table">
                                 <thead>
                                     <tr>
@@ -325,6 +460,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </t>
                             </t>
                         </t>
                         <div style="page-break-after: always;"/>
