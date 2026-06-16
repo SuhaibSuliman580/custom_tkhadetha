@@ -137,6 +137,26 @@
                             display: block;
                             margin-bottom: 3px;
                         }
+                        .partner-statement .line-card {
+                            border: 1px solid #badbcc;
+                            background: #fbfffd;
+                            margin: 7px 0;
+                            padding: 7px 9px;
+                            page-break-inside: avoid;
+                        }
+                        .partner-statement .line-name {
+                            color: #14532d;
+                            font-weight: 700;
+                            margin-bottom: 6px;
+                        }
+                        .partner-statement .mini-kv {
+                            table-layout: fixed;
+                            margin-bottom: 0;
+                        }
+                        .partner-statement .mini-kv td {
+                            width: 25%;
+                            background: #ffffff;
+                        }
                         .partner-statement .invoice-summary td {
                             background: #f0f9ff;
                         }
@@ -259,7 +279,9 @@
                                                     </td>
                                                     <td colspan="2">
                                                         <strong t-esc="labels['account']"/>
-                                                        <span class="bidi-text" dir="auto" t-esc="row['line'].account_id.display_name"/>
+                                                        <span class="amount-cell" t-esc="row['line'].account_id.code"/>
+                                                        <t t-if="row['line'].account_id.code and row['line'].account_id.name"> - </t>
+                                                        <span class="bidi-text" dir="rtl" t-esc="row['line'].account_id.name"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -303,35 +325,36 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <table class="table table-sm table-bordered lines-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width: 40%;" t-esc="labels['product_service']"/>
-                                                        <th style="width: 15%;" t-esc="labels['quantity']"/>
-                                                        <th style="width: 15%;" t-esc="labels['unit']"/>
-                                                        <th class="text-end" style="width: 15%;" t-esc="labels['unit_price']"/>
-                                                        <th class="text-end" style="width: 15%;" t-esc="labels['subtotal']"/>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr t-if="not row['lines']">
-                                                        <td class="empty-line" colspan="5" t-esc="labels['no_invoice_lines']"/>
-                                                    </tr>
-                                                    <tr t-foreach="row['lines']" t-as="line">
-                                                        <td><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
-                                                        <td class="text-end"><span class="amount-cell" t-esc="line['quantity']"/></td>
-                                                        <td><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
-                                                        <td class="text-end">
-                                                            <span class="amount-cell" t-esc="line['price_unit']"
-                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            <span class="amount-cell" t-esc="line['subtotal']"
-                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div t-if="not row['lines']" class="empty-line" t-esc="labels['no_invoice_lines']"/>
+                                            <div t-foreach="row['lines']" t-as="line" class="line-card">
+                                                <div class="line-name">
+                                                    <span class="bidi-text" dir="rtl" t-esc="line['name']"/>
+                                                </div>
+                                                <table class="mini-kv">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <strong t-esc="labels['quantity']"/>
+                                                                <span class="amount-cell" t-esc="line['quantity']"/>
+                                                            </td>
+                                                            <td>
+                                                                <strong t-esc="labels['unit']"/>
+                                                                <span class="bidi-text" dir="rtl" t-esc="line['uom']"/>
+                                                            </td>
+                                                            <td>
+                                                                <strong t-esc="labels['unit_price']"/>
+                                                                <span class="amount-cell" t-esc="line['price_unit']"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                            </td>
+                                                            <td>
+                                                                <strong t-esc="labels['subtotal']"/>
+                                                                <span class="amount-cell" t-esc="line['subtotal']"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </t>
                                     </div>
                                 </div>
