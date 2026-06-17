@@ -127,6 +127,12 @@
                         line-height: 16px;
                         font-size: 12px;
                     }
+                    .phone-number {
+                        direction: ltr !important;
+                        unicode-bidi: embed !important;
+                        text-align: left !important;
+                        font-family: "DejaVu Sans", "Noto Sans Arabic", Arial, sans-serif !important;
+                    }
                     .al-fouad-logo {
                         position: absolute;
                         top: 18px;
@@ -277,8 +283,8 @@
                     </div>
                     <div class="al-fouad-green">
                         <div class="al-fouad-green-content">
-                            <div><span class="al-fouad-whatsapp">☎</span>+963 959 500 533</div>
-                            <div><span class="al-fouad-whatsapp">☎</span>+963 959 500 507</div>
+                            <div><span class="al-fouad-whatsapp">☎</span><span class="phone-number">+963 959 500 533</span></div>
+                            <div><span class="al-fouad-whatsapp">☎</span><span class="phone-number">+963 959 500 507</span></div>
                         </div>
                     </div>
                     <div class="al-fouad-title">invoice</div>
