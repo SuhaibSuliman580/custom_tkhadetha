@@ -364,7 +364,7 @@
                         <tr>
                             <td>المدفوع</td>
                             <td class="num">
-                                <span t-out="o._get_al_fouad_paid_amount()"
+                                <span t-out="o.amount_total - o.amount_residual"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
