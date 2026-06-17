@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_al_fouad" inherit_id="account.report_invoice_document" priority="99">
+        <xpath expr="." position="replace">
+            <div class="article al-fouad-invoice" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+                <style>
+                    .al-fouad-invoice {
+                        position: relative;
+                        min-height: 0;
+                        padding: 0 28px 16px 28px;
+                        color: #111;
+                        font-family: Arial, Helvetica, sans-serif;
+                        overflow: visible;
+                    }
+                    .al-fouad-invoice * {
+                        box-sizing: border-box;
+                    }
+                    .al-fouad-header {
+                        position: relative;
+                        height: 365px;
+                    }
+                    .al-fouad-title {
+                        position: absolute;
+                        top: 248px;
+                        left: -28px;
+                        width: 282px;
+                        height: 66px;
+                        border-radius: 0 31px 31px 0;
+                        background: #050505;
+                        color: #fff;
+                        font-size: 50px;
+                        line-height: 66px;
+                        font-weight: 700;
+                        letter-spacing: 0;
+                        padding-left: 35px;
+                        z-index: 3;
+                    }
+                    .al-fouad-blue {
+                        position: absolute;
+                        top: 238px;
+                        left: 210px;
+                        width: 330px;
+                        height: 96px;
+                        background: #273789;
+                        transform: skewX(-6deg);
+                    }
+                    .al-fouad-blue:before {
+                        content: "";
+                        position: absolute;
+                        top: -9px;
+                        left: 8px;
+                        width: 250px;
+                        border-top: 3px solid #111;
+                    }
+                    .al-fouad-blue-content {
+                        position: absolute;
+                        top: 17px;
+                        right: 28px;
+                        bottom: 17px;
+                        left: 46px;
+                        transform: skewX(6deg);
+                        direction: rtl;
+                        color: #fff;
+                        font-size: 14px;
+                        line-height: 26px;
+                        white-space: nowrap;
+                    }
+                    .al-fouad-pin {
+                        display: inline-block;
+                        width: 18px;
+                        height: 18px;
+                        margin-left: 10px;
+                        border-radius: 50% 50% 50% 0;
+                        background: #00956f;
+                        transform: rotate(-45deg);
+                        vertical-align: middle;
+                    }
+                    .al-fouad-pin:after {
+                        content: "";
+                        display: block;
+                        width: 6px;
+                        height: 6px;
+                        margin: 6px 0 0 6px;
+                        border-radius: 50%;
+                        background: #273789;
+                    }
+                    .al-fouad-green {
+                        position: absolute;
+                        top: 236px;
+                        left: 550px;
+                        right: -28px;
+                        height: 96px;
+                        background: #006a58;
+                        transform: skewX(-3deg);
+                    }
+                    .al-fouad-green:before {
+                        content: "";
+                        position: absolute;
+                        top: 97px;
+                        left: 34px;
+                        right: 28px;
+                        border-top: 3px solid #111;
+                    }
+                    .al-fouad-green-content {
+                        position: absolute;
+                        top: 15px;
+                        right: 18px;
+                        bottom: 15px;
+                        left: 16px;
+                        transform: skewX(3deg);
+                        color: #fff;
+                        font-size: 15px;
+                        line-height: 28px;
+                        font-weight: 700;
+                        white-space: nowrap;
+                    }
+                    .al-fouad-whatsapp {
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        margin-right: 9px;
+                        border: 2px solid #fff;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 16px;
+                        font-size: 12px;
+                    }
+                    .al-fouad-logo {
+                        position: absolute;
+                        top: 18px;
+                        left: 50%;
+                        width: 240px;
+                        margin-left: -120px;
+                        text-align: center;
+                        z-index: 4;
+                    }
+                    .al-fouad-logo img {
+                        width: 205px;
+                        height: auto;
+                        display: block;
+                        margin: 0 auto;
+                    }
+                    .al-fouad-date {
+                        position: absolute;
+                        top: 340px;
+                        left: 24px;
+                        font-size: 15px;
+                        direction: rtl;
+                    }
+                    .al-fouad-date .slashes {
+                        direction: ltr;
+                        display: inline-block;
+                        min-width: 130px;
+                        text-align: center;
+                    }
+                    .al-fouad-watermark {
+                        position: absolute;
+                        top: 420px;
+                        left: 50%;
+                        width: 500px;
+                        height: 500px;
+                        margin-left: -250px;
+                        border: 7px solid #f2f2f2;
+                        border-radius: 50%;
+                        direction: rtl;
+                        text-align: center;
+                        color: #f1f1f1;
+                        font-size: 88px;
+                        font-weight: 700;
+                        line-height: 480px;
+                        transform: rotate(-14deg);
+                        z-index: 0;
+                    }
+                    .al-fouad-body {
+                        position: relative;
+                        z-index: 1;
+                        margin-top: 12px;
+                        min-height: 0;
+                        direction: rtl;
+                    }
+                    .al-fouad-info {
+                        width: 100%;
+                        margin-bottom: 18px;
+                        border-collapse: collapse;
+                        font-size: 13px;
+                    }
+                    .al-fouad-info td {
+                        padding: 6px 8px;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    .al-fouad-info .label {
+                        width: 110px;
+                        font-weight: 700;
+                        color: #273789;
+                    }
+                    .al-fouad-lines {
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 12px;
+                    }
+                    .al-fouad-lines th {
+                        background: #273789;
+                        color: #fff;
+                        padding: 8px 6px;
+                        border: 1px solid #273789;
+                        text-align: center;
+                    }
+                    .al-fouad-lines td {
+                        padding: 8px 6px;
+                        border: 1px solid #d8d8d8;
+                        vertical-align: top;
+                    }
+                    .al-fouad-lines .num {
+                        direction: ltr;
+                        text-align: center;
+                        white-space: nowrap;
+                    }
+                    .al-fouad-totals {
+                        width: 300px;
+                        margin: 18px 0 0 auto;
+                        border-collapse: collapse;
+                        font-size: 12px;
+                    }
+                    .al-fouad-totals td {
+                        padding: 7px 8px;
+                        border-bottom: 1px solid #d8d8d8;
+                    }
+                    .al-fouad-totals .total {
+                        background: #006a58;
+                        color: #fff;
+                        font-weight: 700;
+                    }
+                    .al-fouad-totals .ending-balance {
+                        color: #c00000;
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+                    .al-fouad-notes {
+                        margin-top: 18px;
+                        font-size: 12px;
+                        line-height: 20px;
+                        min-height: 48px;
+                    }
+                    .al-fouad-footer-pattern {
+                        position: absolute;
+                        left: -28px;
+                        right: -28px;
+                        bottom: 0;
+                        height: 70px;
+                        background:
+                            radial-gradient(ellipse at center, transparent 0 38%, #f2f2f2 39% 43%, transparent 44%) 0 0 / 42px 30px,
+                            radial-gradient(ellipse at center, transparent 0 38%, #f2f2f2 39% 43%, transparent 44%) 21px 15px / 42px 30px;
+                    }
+                </style>
+
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang or o.env.user.lang)"/>
+                <div class="al-fouad-header">
+                    <div class="al-fouad-blue">
+                        <div class="al-fouad-blue-content">
+                            <div><span class="al-fouad-pin"></span>المدينة الصناعية - باب الهوى</div>
+                            <div><span class="al-fouad-pin"></span>سرمدا - شارع بيت الشيخ</div>
+                        </div>
+                    </div>
+                    <div class="al-fouad-green">
+                        <div class="al-fouad-green-content">
+                            <div><span class="al-fouad-whatsapp">☎</span>+963 959 500 533</div>
+                            <div><span class="al-fouad-whatsapp">☎</span>+963 959 500 507</div>
+                        </div>
+                    </div>
+                    <div class="al-fouad-title">invoice</div>
+                    <div class="al-fouad-logo">
+                        <img src="/odoo_invoice_service_template_17/static/src/img/al_fouad_logo.jpg" alt="AL-FOUAD"/>
+                    </div>
+                    <div class="al-fouad-date">
+                        <strong>التاريخ:</strong>
+                        <span class="slashes" t-if="o.invoice_date" t-field="o.invoice_date"/>
+                        <span class="slashes" t-else="">202&#160;&#160;/&#160;&#160;/</span>
+                    </div>
+                </div>
+
+                <div class="al-fouad-watermark">
+                    الفؤاد
+                </div>
+
+                <div class="al-fouad-body">
+                    <table class="al-fouad-info">
+                        <tr>
+                            <td class="label">رقم الفاتورة</td>
+                            <td><span t-field="o.name"/></td>
+                            <td class="label">العميل</td>
+                            <td><span t-field="o.partner_id"/></td>
+                        </tr>
+                        <tr>
+                            <td class="label">تاريخ الاستحقاق</td>
+                            <td><span t-field="o.invoice_date_due"/></td>
+                            <td class="label">المرجع</td>
+                            <td><span t-field="o.ref"/></td>
+                        </tr>
+                    </table>
+
+                    <table class="al-fouad-lines">
+                        <thead>
+                            <tr>
+                                <th style="width: 44%;">البيان</th>
+                                <th style="width: 12%;">الكمية</th>
+                                <th style="width: 14%;">السعر</th>
+                                <th style="width: 12%;">الضريبة</th>
+                                <th style="width: 18%;">الإجمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
+                                <tr>
+                                    <td><span t-field="line.name"/></td>
+                                    <td class="num"><span t-field="line.quantity"/></td>
+                                    <td class="num"><span t-field="line.price_unit"/></td>
+                                    <td class="num"><span t-esc="', '.join(line.tax_ids.mapped('name'))"/></td>
+                                    <td class="num"><span t-field="line.price_subtotal"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <table class="al-fouad-totals">
+                        <tr>
+                            <td>الرصيد السابق</td>
+                            <td class="num">
+                                <span t-out="o._get_al_fouad_previous_balance()"
+                                      t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>الإجمالي قبل الضريبة</td>
+                            <td class="num"><span t-field="o.amount_untaxed"/></td>
+                        </tr>
+                        <tr>
+                            <td>الضريبة</td>
+                            <td class="num"><span t-field="o.amount_tax"/></td>
+                        </tr>
+                        <tr class="total">
+                            <td>الإجمالي</td>
+                            <td class="num"><span t-field="o.amount_total"/></td>
+                        </tr>
+                        <tr class="ending-balance">
+                            <td>الرصيد اللاحق</td>
+                            <td class="num">
+                                <span t-out="o._get_al_fouad_after_balance()"
+                                      t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="al-fouad-notes" t-if="o.narration">
+                        <strong>ملاحظات:</strong>
+                        <div t-field="o.narration"/>
+                    </div>
+                </div>
+
+                <div class="al-fouad-footer-pattern"></div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

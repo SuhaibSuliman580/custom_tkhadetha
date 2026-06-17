@@ -14,6 +14,7 @@ class InvoiceServiceTemplate(models.Model):
         default=lambda self: self.env.company,
         index=True,
     )
+    branch_id = fields.Many2one('res.branch', string='Branch', default=lambda self: self.env.user.branch_id, index=True)
     line_ids = fields.One2many(
         'invoice.service.template.line',
         'template_id',
@@ -28,6 +29,8 @@ class InvoiceServiceTemplate(models.Model):
 
     def action_apply_to_invoice(self, move, replace_existing=False):
         self.ensure_one()
+        if self.branch_id and move.branch_id and self.branch_id != move.branch_id:
+            raise ValidationError(_('Template branch must match invoice branch.'))
         if move.move_type != 'out_invoice':
             raise ValidationError(_('This template can only be applied to customer invoices.'))
         if move.state != 'draft':
@@ -63,6 +66,7 @@ class InvoiceServiceTemplateLine(models.Model):
         ondelete='cascade',
     )
     company_id = fields.Many2one(related='template_id.company_id', store=True, readonly=True)
+    branch_id = fields.Many2one(related='template_id.branch_id', store=True, readonly=True)
     product_id = fields.Many2one(
         'product.product',
         required=True,
