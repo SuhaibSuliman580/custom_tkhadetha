@@ -47,12 +47,7 @@ class AccountMove(models.Model):
     def _get_al_fouad_after_balance(self):
         self.ensure_one()
         previous_balance = self._get_al_fouad_previous_balance()
-        current_residual = sum(
-            self.line_ids.filtered(
-                lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable')
-            ).mapped('amount_residual')
-        )
-        return previous_balance + current_residual
+        return previous_balance + self.amount_residual_signed
 
     def _get_al_fouad_paid_amount(self):
         self.ensure_one()
