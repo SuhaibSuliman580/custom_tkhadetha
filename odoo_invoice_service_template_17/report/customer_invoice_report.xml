@@ -361,6 +361,13 @@
                             <td>الإجمالي</td>
                             <td class="num"><span t-field="o.amount_total"/></td>
                         </tr>
+                        <tr>
+                            <td>المدفوع</td>
+                            <td class="num">
+                                <span t-out="o._get_al_fouad_paid_amount()"
+                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
                         <tr class="ending-balance">
                             <td>الرصيد اللاحق</td>
                             <td class="num">
