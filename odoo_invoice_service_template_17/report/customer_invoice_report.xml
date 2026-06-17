@@ -9,7 +9,7 @@
                         min-height: 0;
                         padding: 0 28px 16px 28px;
                         color: #111;
-                        font-family: Arial, Helvetica, sans-serif;
+                        font-family: "DejaVu Sans", Arial, "Noto Sans Arabic", sans-serif;
                         overflow: visible;
                     }
                     .al-fouad-invoice * {
@@ -113,6 +113,8 @@
                         line-height: 28px;
                         font-weight: 700;
                         white-space: nowrap;
+                        direction: ltr;
+                        text-align: left;
                     }
                     .al-fouad-whatsapp {
                         display: inline-block;
@@ -152,6 +154,12 @@
                         display: inline-block;
                         min-width: 130px;
                         text-align: center;
+                        font-family: "DejaVu Sans", Arial, sans-serif;
+                    }
+                    .al-fouad-latin {
+                        direction: ltr;
+                        unicode-bidi: embed;
+                        font-family: "DejaVu Sans", Arial, sans-serif;
                     }
                     .al-fouad-watermark {
                         position: absolute;
@@ -187,11 +195,15 @@
                     .al-fouad-info td {
                         padding: 6px 8px;
                         border-bottom: 1px solid #ddd;
+                        text-align: right;
                     }
                     .al-fouad-info .label {
                         width: 110px;
                         font-weight: 700;
                         color: #273789;
+                    }
+                    .al-fouad-info .al-fouad-latin {
+                        text-align: right;
                     }
                     .al-fouad-lines {
                         width: 100%;
@@ -214,6 +226,8 @@
                         direction: ltr;
                         text-align: center;
                         white-space: nowrap;
+                        unicode-bidi: embed;
+                        font-family: "DejaVu Sans", Arial, sans-serif;
                     }
                     .al-fouad-totals {
                         width: 300px;
@@ -286,15 +300,15 @@
                     <table class="al-fouad-info">
                         <tr>
                             <td class="label">رقم الفاتورة</td>
-                            <td><span t-field="o.name"/></td>
+                            <td class="al-fouad-latin"><span t-field="o.name"/></td>
                             <td class="label">العميل</td>
                             <td><span t-field="o.partner_id"/></td>
                         </tr>
                         <tr>
                             <td class="label">تاريخ الاستحقاق</td>
-                            <td><span t-field="o.invoice_date_due"/></td>
+                            <td class="al-fouad-latin"><span t-field="o.invoice_date_due"/></td>
                             <td class="label">المرجع</td>
-                            <td><span t-field="o.ref"/></td>
+                            <td class="al-fouad-latin"><span t-field="o.ref"/></td>
                         </tr>
                     </table>
 
