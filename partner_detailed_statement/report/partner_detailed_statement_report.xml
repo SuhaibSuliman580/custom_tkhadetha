@@ -283,238 +283,81 @@
                             <p t-esc="labels['no_movements']"/>
                         </t>
 
-                        <t t-foreach="statement['rows']" t-as="row">
-                            <t t-if="is_arabic">
-                                <div class="movement-card">
-                                    <div class="movement-card-title">
-                                        <span class="code-cell" t-if="row['invoice']" t-esc="row['invoice'].name"/>
-                                        <span class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
-                                    </div>
-                                    <div class="movement-card-body">
-                                        <div class="movement-note" t-if="row['line'].ref or row['line'].name">
-                                            <span class="note-ref" t-if="row['line'].ref" t-esc="row['line'].ref"/>
-                                            <span class="note-name" t-if="row['line'].name" t-esc="row['line'].name"/>
-                                        </div>
-                                        <table class="kv-table">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <strong t-esc="labels['date']"/>
-                                                        <span class="date-cell" t-esc="row['date']"/>
-                                                    </td>
-                                                    <td>
-                                                        <strong t-esc="labels['journal']"/>
-                                                        <span class="code-cell" t-esc="row['line'].journal_id.code"/>
-                                                    </td>
-                                                    <td colspan="2">
-                                                        <strong t-esc="labels['account']"/>
-                                                        <span class="amount-cell" t-esc="row['line'].account_id.code"/>
-                                                        <t t-if="row['line'].account_id.code and row['line'].account_id.name"> - </t>
-                                                        <span class="bidi-text" dir="rtl" t-esc="row['line'].account_id.name"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <strong t-esc="labels['debit']"/>
-                                                        <span class="amount-cell" t-esc="row['debit']"
-                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                                    </td>
-                                                    <td>
-                                                        <strong t-esc="labels['credit']"/>
-                                                        <span class="amount-cell" t-esc="row['credit']"
-                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                                    </td>
-                                                    <td colspan="2">
-                                                        <strong t-esc="labels['balance_after']"/>
-                                                        <span class="amount-cell" t-esc="row['invoice_balance']"
-                                                              t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <t t-if="row['invoice'] and data['form']['include_invoice_lines']">
-                                            <table class="kv-table invoice-summary">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <strong t-esc="labels['invoice_total']"/>
-                                                            <span class="amount-cell" t-esc="row['invoice'].amount_total"
-                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                        </td>
-                                                        <td>
-                                                            <strong t-esc="labels['residual']"/>
-                                                            <span class="amount-cell" t-esc="row['invoice'].amount_residual"
-                                                                  t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                        </td>
-                                                        <td colspan="2">
-                                                            <strong t-esc="labels['payment_status']"/>
-                                                            <span class="bidi-text" dir="auto" t-esc="row['invoice'].payment_state"/>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div t-if="not row['lines']" class="empty-line" t-esc="labels['no_invoice_lines']"/>
-                                            <div t-foreach="row['lines']" t-as="line" class="line-card">
-                                                <div class="line-name">
-                                                    <span class="product-name" t-esc="line['name']"/>
-                                                </div>
-                                                <table class="mini-kv">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <strong t-esc="labels['quantity']"/>
-                                                                <span class="amount-cell" t-esc="line['quantity']"/>
-                                                            </td>
-                                                            <td>
-                                                                <strong t-esc="labels['unit']"/>
-                                                                <span class="bidi-text" dir="rtl" t-esc="line['uom']"/>
-                                                            </td>
-                                                            <td>
-                                                                <strong t-esc="labels['unit_price']"/>
-                                                                <span class="amount-cell" t-esc="line['price_unit']"
-                                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                            </td>
-                                                            <td>
-                                                                <strong t-esc="labels['subtotal']"/>
-                                                                <span class="amount-cell" t-esc="line['subtotal']"
-                                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </t>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <t t-if="not is_arabic">
-                            <table class="table table-sm table-reports mt-2 movement-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 25%;" t-esc="labels['movement']"/>
-                                        <th style="width: 12%;" t-esc="labels['date']"/>
-                                        <th style="width: 9%;" t-esc="labels['journal']"/>
-                                        <th style="width: 22%;" t-esc="labels['account']"/>
-                                        <th class="text-end" style="width: 10%;" t-esc="labels['debit']"/>
-                                        <th class="text-end" style="width: 10%;" t-esc="labels['credit']"/>
-                                        <th class="text-end" style="width: 12%;" t-esc="labels['balance_after']"/>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <strong class="code-cell" t-if="row['invoice']" t-esc="row['invoice'].name"/>
-                                            <strong class="code-cell" t-if="not row['invoice']" t-esc="row['line'].move_id.name"/>
-                                            <br t-if="row['line'].ref"/>
-                                            <span class="bidi-text" dir="auto" t-if="row['line'].ref" t-esc="row['line'].ref"/>
-                                            <br/>
-                                            <span class="bidi-text" dir="auto" t-esc="row['line'].name"/>
-                                        </td>
-                                        <td class="date-cell"><span t-esc="row['date']"/></td>
-                                        <td class="code-cell"><span t-esc="row['line'].journal_id.code"/></td>
-                                        <td><span class="bidi-text" dir="auto" t-esc="row['line'].account_id.display_name"/></td>
-                                        <td class="text-end">
-                                            <span class="amount-cell" t-esc="row['debit']"
-                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                        </td>
-                                        <td class="text-end">
-                                            <span class="amount-cell" t-esc="row['credit']"
-                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                        </td>
-                                        <td class="text-end">
-                                            <span class="amount-cell" t-esc="row['invoice_balance']"
-                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <t t-if="row['invoice'] and data['form']['include_invoice_lines']">
-                                <table class="table table-sm table-bordered invoice-summary">
-                                    <tbody>
-                                        <tr>
-                                            <td><strong t-esc="labels['invoice_total']"/></td>
-                                            <td class="text-end">
-                                                <span class="amount-cell" t-esc="row['invoice'].amount_total"
-                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                            </td>
-                                            <td><strong t-esc="labels['residual']"/></td>
-                                            <td class="text-end">
-                                                <span class="amount-cell" t-esc="row['invoice'].amount_residual"
-                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                            </td>
-                                            <td><strong t-esc="labels['payment_status']"/></td>
-                                            <td><span class="bidi-text" dir="auto" t-esc="row['invoice'].payment_state"/></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table class="table table-sm table-bordered lines-table">
-                                    <thead>
-                                        <tr>
-                                            <th t-esc="labels['product_service']"/>
-                                            <th class="text-end" t-esc="labels['quantity']"/>
-                                            <th t-esc="labels['unit']"/>
-                                            <th class="text-end" t-esc="labels['unit_price']"/>
-                                            <th class="text-end" t-esc="labels['discount']"/>
-                                            <th class="text-end" t-esc="labels['subtotal']"/>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr t-if="not row['lines']">
-                                            <td class="empty-line" colspan="6" t-esc="labels['no_invoice_lines']"/>
-                                        </tr>
+                        <table t-if="statement['rows']" class="table table-sm table-bordered movement-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;" t-esc="labels['invoice_no']"/>
+                                    <th style="width: 10%;" t-esc="labels['date']"/>
+                                    <th style="width: 28%;" t-esc="labels['description']"/>
+                                    <th class="text-end" style="width: 8%;" t-esc="labels['quantity']"/>
+                                    <th style="width: 8%;" t-esc="labels['unit']"/>
+                                    <th class="text-end" style="width: 10%;" t-esc="labels['line_value']"/>
+                                    <th class="text-end" style="width: 10%;" t-esc="labels['amount']"/>
+                                    <th class="text-end" style="width: 11%;" t-esc="labels['balance_after']"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="statement['rows']" t-as="row">
+                                    <t t-if="row['invoice'] and data['form']['include_invoice_lines'] and row['lines']">
                                         <tr t-foreach="row['lines']" t-as="line">
+                                            <td><span class="code-cell" t-esc="row['invoice'].name"/></td>
+                                            <td class="date-cell"><span t-esc="row['date']"/></td>
                                             <td><span class="bidi-text" dir="auto" t-esc="line['name']"/></td>
                                             <td class="text-end"><span class="amount-cell" t-esc="line['quantity']"/></td>
                                             <td><span class="bidi-text" dir="auto" t-esc="line['uom']"/></td>
                                             <td class="text-end">
-                                                <span class="amount-cell" t-esc="line['price_unit']"
-                                                      t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
-                                            </td>
-                                            <td class="text-end"><span class="amount-cell" t-esc="line['discount']"/></td>
-                                            <td class="text-end">
                                                 <span class="amount-cell" t-esc="line['subtotal']"
                                                       t-options="{'widget': 'monetary', 'display_currency': row['invoice'].currency_id}"/>
                                             </td>
+                                            <td class="text-end">
+                                                <span class="amount-cell" t-esc="row['debit'] or row['credit']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="amount-cell" t-esc="row['invoice_balance']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </t>
-
-                            <t t-if="data['form']['include_payments'] and row['payments']">
-                                <table class="table table-sm table-bordered lines-table">
-                                    <thead>
+                                    </t>
+                                    <t t-if="row['invoice'] and data['form']['include_invoice_lines'] and not row['lines']">
                                         <tr>
-                                            <th t-esc="labels['payment_settlement']"/>
-                                            <th t-esc="labels['date']"/>
-                                            <th t-esc="labels['journal']"/>
-                                            <th t-esc="labels['reference']"/>
-                                            <th class="text-end" t-esc="labels['amount']"/>
-                                            <th class="text-end" t-esc="labels['balance_after']"/>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr t-foreach="row['payments']" t-as="payment">
-                                            <td><span t-esc="payment['name']"/></td>
-                                            <td><span t-esc="payment['date']"/></td>
-                                            <td><span t-esc="payment['journal']"/></td>
-                                            <td><span t-esc="payment['ref']"/></td>
+                                            <td><span class="code-cell" t-esc="row['invoice'].name"/></td>
+                                            <td class="date-cell"><span t-esc="row['date']"/></td>
+                                            <td><span class="bidi-text" dir="auto" t-esc="row['label']"/></td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
                                             <td class="text-end">
-                                                <span t-esc="payment['amount']"
+                                                <span class="amount-cell" t-esc="row['debit'] or row['credit']"
                                                       t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                             </td>
                                             <td class="text-end">
-                                                <span t-esc="payment['balance']"
+                                                <span class="amount-cell" t-esc="row['invoice_balance']"
                                                       t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                             </td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </t>
-                            </t>
-                        </t>
+                                    </t>
+                                    <t t-if="not row['invoice'] or not data['form']['include_invoice_lines']">
+                                        <tr>
+                                            <td><span class="code-cell" t-esc="row['line'].move_id.name"/></td>
+                                            <td class="date-cell"><span t-esc="row['date']"/></td>
+                                            <td><span class="bidi-text" dir="auto" t-esc="row['label']"/></td>
+                                            <td/>
+                                            <td/>
+                                            <td/>
+                                            <td class="text-end">
+                                                <span class="amount-cell" t-esc="row['debit'] or row['credit']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="amount-cell" t-esc="row['invoice_balance']"
+                                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
                         <div style="page-break-after: always;"/>
                     </t>
                     </div>

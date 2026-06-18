@@ -44,7 +44,9 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'ending_balance': 'Ending Balance',
             'no_movements': 'No invoice or payment movements found for the selected filters.',
             'movement': 'Movement',
+            'invoice_no': 'Invoice No.',
             'date': 'Date',
+            'description': 'Description',
             'journal': 'Journal',
             'account': 'Account',
             'debit': 'Debit',
@@ -63,6 +65,7 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'payment_settlement': 'Payment / Settlement',
             'reference': 'Reference',
             'amount': 'Amount',
+            'line_value': 'Value',
         }
         if not self._is_arabic():
             return labels
@@ -82,7 +85,9 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'ending_balance': 'الرصيد الختامي',
             'no_movements': 'لا توجد حركات فواتير أو دفعات حسب عوامل التصفية المحددة.',
             'movement': 'الحركة',
+            'invoice_no': 'رقم الفاتورة',
             'date': 'التاريخ',
+            'description': 'الوصف',
             'journal': 'اليومية',
             'account': 'الحساب',
             'debit': 'مدين',
@@ -101,6 +106,7 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'payment_settlement': 'دفعة / تسوية',
             'reference': 'المرجع',
             'amount': 'المبلغ',
+            'line_value': 'القيمة',
         })
         return labels
 

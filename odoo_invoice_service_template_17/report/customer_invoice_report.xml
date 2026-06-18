@@ -168,22 +168,7 @@
                         font-family: "DejaVu Sans", Arial, sans-serif;
                     }
                     .al-fouad-watermark {
-                        position: absolute;
-                        top: 420px;
-                        left: 50%;
-                        width: 500px;
-                        height: 500px;
-                        margin-left: -250px;
-                        border: 7px solid #f2f2f2;
-                        border-radius: 50%;
-                        direction: rtl;
-                        text-align: center;
-                        color: #f1f1f1;
-                        font-size: 88px;
-                        font-weight: 700;
-                        line-height: 480px;
-                        transform: rotate(-14deg);
-                        z-index: 0;
+                        display: none;
                     }
                     .al-fouad-body {
                         position: relative;
@@ -205,7 +190,7 @@
                     }
                     .al-fouad-info .label {
                         width: 110px;
-                        font-weight: 700;
+                        font-weight: 800;
                         color: #273789;
                     }
                     .al-fouad-info .al-fouad-latin {
@@ -222,6 +207,7 @@
                         padding: 8px 6px;
                         border: 1px solid #273789;
                         text-align: center;
+                        font-weight: 800;
                     }
                     .al-fouad-lines td {
                         padding: 8px 6px;
@@ -248,7 +234,7 @@
                     .al-fouad-totals .total {
                         background: #006a58;
                         color: #fff;
-                        font-weight: 700;
+                        font-weight: 800;
                     }
                     .al-fouad-totals .ending-balance {
                         color: #c00000;
@@ -371,7 +357,7 @@
                         <tr class="ending-balance">
                             <td>الرصيد اللاحق</td>
                             <td class="num">
-                                <span t-out="o._get_al_fouad_after_balance()"
+                                <span t-out="o._get_al_fouad_previous_balance() + o.amount_residual_signed"
                                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                             </td>
                         </tr>
