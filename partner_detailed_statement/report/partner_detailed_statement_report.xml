@@ -286,12 +286,12 @@
                         <table t-if="statement['rows']" class="table table-sm table-bordered movement-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 15%;" t-esc="labels['invoice_no']"/>
+                                    <th style="width: 15%;" t-esc="labels.get('invoice_no', labels['movement'])"/>
                                     <th style="width: 10%;" t-esc="labels['date']"/>
-                                    <th style="width: 28%;" t-esc="labels['description']"/>
+                                    <th style="width: 28%;" t-esc="labels.get('description', labels['product_service'])"/>
                                     <th class="text-end" style="width: 8%;" t-esc="labels['quantity']"/>
                                     <th style="width: 8%;" t-esc="labels['unit']"/>
-                                    <th class="text-end" style="width: 10%;" t-esc="labels['line_value']"/>
+                                    <th class="text-end" style="width: 10%;" t-esc="labels.get('line_value', labels['subtotal'])"/>
                                     <th class="text-end" style="width: 10%;" t-esc="labels['amount']"/>
                                     <th class="text-end" style="width: 11%;" t-esc="labels['balance_after']"/>
                                 </tr>
