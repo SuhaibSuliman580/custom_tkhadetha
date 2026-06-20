@@ -209,7 +209,7 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
                 subtotal = abs(line.balance)
             lines.append({
                 'name': line.product_id.display_name or line.name,
-                'notes': line.statement_note or '' if 'statement_note' in line._fields else '',
+                'notes': '',
                 'quantity': line.quantity if 'quantity' in line._fields else 1.0,
                 'uom': line.product_uom_id.name if 'product_uom_id' in line._fields else '',
                 'price_unit': line.price_unit if 'price_unit' in line._fields else subtotal,
