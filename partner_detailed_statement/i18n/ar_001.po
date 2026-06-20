@@ -175,3 +175,11 @@ msgstr "المبلغ"
 #. module: partner_detailed_statement
 msgid "Credit / Bill Adjustment"
 msgstr "تسوية إشعار دائن / فاتورة مورد"
+
+#. module: partner_detailed_statement
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: partner_detailed_statement
+msgid "Line Notes"
+msgstr "ملاحظات البند"

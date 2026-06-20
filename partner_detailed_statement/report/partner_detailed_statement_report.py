@@ -56,6 +56,7 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'residual': 'Residual',
             'payment_status': 'Payment Status',
             'product_service': 'Product / Service',
+            'notes': 'Notes',
             'quantity': 'Quantity',
             'unit': 'Unit',
             'unit_price': 'Unit Price',
@@ -108,6 +109,7 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
             'amount': 'المبلغ',
             'line_value': 'القيمة',
         })
+        labels['notes'] = 'ملاحظات'
         return labels
 
     def _base_invoice_domain(self, data):
@@ -181,21 +183,33 @@ class ReportPartnerDetailedStatement(models.AbstractModel):
 
     def _invoice_line_values(self, invoice):
         lines = []
-        invoice_lines = invoice.invoice_line_ids.filtered(
-            lambda item: item.display_type not in ('line_section', 'line_note')
+        invoice_lines = invoice.invoice_line_ids.sorted(
+            key=lambda item: (item.sequence, item.id)
         )
-        if not invoice_lines:
+        if not invoice_lines.filtered(
+            lambda item: item.display_type not in ('line_section', 'line_note')
+        ):
             invoice_lines = invoice.line_ids.filtered(
                 lambda item: item.display_type not in ('line_section', 'line_note')
                 and item.account_id.account_type not in ('asset_receivable', 'liability_payable')
                 and not item.tax_line_id
             )
         for line in invoice_lines:
+            if line.display_type == 'line_section':
+                continue
+            if line.display_type == 'line_note':
+                if lines and line.name:
+                    current_notes = lines[-1]['notes']
+                    lines[-1]['notes'] = '\n'.join(
+                        value for value in (current_notes, line.name) if value
+                    )
+                continue
             subtotal = line.price_subtotal if 'price_subtotal' in line._fields else abs(line.balance)
             if not subtotal and line.balance:
                 subtotal = abs(line.balance)
             lines.append({
                 'name': line.product_id.display_name or line.name,
+                'notes': line.statement_note or '' if 'statement_note' in line._fields else '',
                 'quantity': line.quantity if 'quantity' in line._fields else 1.0,
                 'uom': line.product_uom_id.name if 'product_uom_id' in line._fields else '',
                 'price_unit': line.price_unit if 'price_unit' in line._fields else subtotal,

@@ -106,15 +106,16 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
         })
         empty_format = workbook.add_format({'italic': True, 'font_color': '#6B7280', 'border': 1})
 
-        sheet.set_column('A:A', 34)
+        sheet.set_column('A:A', 20)
         sheet.set_column('B:B', 13)
-        sheet.set_column('C:C', 15)
-        sheet.set_column('D:D', 28)
-        sheet.set_column('E:G', 15)
-        sheet.set_column('H:H', 14)
+        sheet.set_column('C:C', 28)
+        sheet.set_column('D:D', 24)
+        sheet.set_column('E:E', 11)
+        sheet.set_column('F:F', 12)
+        sheet.set_column('G:J', 15)
 
         row = 0
-        sheet.merge_range(row, 0, row + 1, 7, labels['title'], title_format)
+        sheet.merge_range(row, 0, row + 1, 9, labels['title'], title_format)
         sheet.set_row(row, 28)
         row += 3
 
@@ -143,7 +144,7 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
         for partner in partners:
             statement = report._partner_statement(data, partner)
             partner_name = '%s%s%s' % (partner.ref or '', ' - ' if partner.ref else '', partner.name or '')
-            sheet.merge_range(row, 0, row, 7, partner_name, partner_format)
+            sheet.merge_range(row, 0, row, 9, partner_name, partner_format)
             sheet.set_row(row, 22)
             row += 1
 
@@ -154,50 +155,60 @@ class AccountReportPartnerDetailedStatement(models.TransientModel):
             row += 2
 
             headers = [
-                labels['movement'], labels['date'], labels['journal'], labels['account'],
-                labels['debit'], labels['credit'], labels['balance_after']
+                labels['movement'], labels['date'], labels['product_service'], labels['notes'],
+                labels['quantity'], labels['unit'], labels['unit_price'],
+                labels['subtotal'], labels['payment_settlement'], labels['balance_after']
             ]
             for index, header in enumerate(headers):
                 sheet.write(row, index, header, header_format)
             row += 1
 
             if not statement['rows']:
-                sheet.merge_range(row, 0, row, 6, labels['no_movements'], empty_format)
+                sheet.merge_range(row, 0, row, 9, labels['no_movements'], empty_format)
                 row += 2
                 continue
 
             for item in statement['rows']:
                 line = item['line']
-                sheet.write(row, 0, item['label'], text_format)
-                sheet.write(row, 1, item['date'].strftime('%Y-%m-%d') if item['date'] else '', date_format)
-                sheet.write(row, 2, line.journal_id.code or '', text_format)
-                sheet.write(row, 3, line.account_id.display_name or '', text_format)
-                sheet.write_number(row, 4, item['debit'], money_format)
-                sheet.write_number(row, 5, item['credit'], money_format)
-                sheet.write_number(row, 6, item['invoice_balance'], money_format)
-                row += 1
-
                 invoice = item['invoice']
-                if invoice and data['form'].get('include_invoice_lines'):
-                    line_headers = [
-                        labels['product_service'], labels['quantity'], labels['unit'],
-                        labels['unit_price'], labels['discount'], labels['subtotal']
-                    ]
-                    for index, header in enumerate(line_headers):
-                        sheet.write(row, index, header, line_header_format)
+                if invoice and data['form'].get('include_invoice_lines') and item['lines']:
+                    for invoice_line in item['lines']:
+                        sheet.write(row, 0, invoice.name or '', text_format)
+                        sheet.write(row, 1, item['date'].strftime('%Y-%m-%d') if item['date'] else '', date_format)
+                        sheet.write(row, 2, invoice_line['name'], text_format)
+                        sheet.write(row, 3, invoice_line['notes'], text_format)
+                        sheet.write_number(row, 4, invoice_line['quantity'], money_format)
+                        sheet.write(row, 5, invoice_line['uom'], text_format)
+                        sheet.write_number(row, 6, invoice_line['price_unit'], money_format)
+                        sheet.write_number(row, 7, invoice_line['subtotal'], money_format)
+                        sheet.write(row, 8, '', text_format)
+                        sheet.write_number(row, 9, item['invoice_balance'], money_format)
+                        row += 1
+                elif invoice and data['form'].get('include_invoice_lines'):
+                    sheet.write(row, 0, invoice.name or '', text_format)
+                    sheet.write(row, 1, item['date'].strftime('%Y-%m-%d') if item['date'] else '', date_format)
+                    sheet.write(row, 2, item['label'], text_format)
+                    sheet.write(row, 3, '', text_format)
+                    sheet.write(row, 4, '', text_format)
+                    sheet.write(row, 5, '', text_format)
+                    sheet.write(row, 6, '', text_format)
+                    sheet.write_number(row, 7, item['debit'] or item['credit'], money_format)
+                    sheet.write(row, 8, '', text_format)
+                    sheet.write_number(row, 9, item['invoice_balance'], money_format)
+                    row += 1
+                else:
+                    sheet.write(row, 0, line.move_id.name or '', text_format)
+                    sheet.write(row, 1, item['date'].strftime('%Y-%m-%d') if item['date'] else '', date_format)
+                    sheet.write(row, 2, item['label'], text_format)
+                    sheet.write(row, 3, '', text_format)
+                    sheet.write(row, 4, '', text_format)
+                    sheet.write(row, 5, '', text_format)
+                    sheet.write(row, 6, '', text_format)
+                    sheet.write(row, 7, '', text_format)
+                    sheet.write_number(row, 8, item['credit'] or item['debit'], money_format)
+                    sheet.write_number(row, 9, item['invoice_balance'], money_format)
                     row += 1
 
-                    if not item['lines']:
-                        sheet.merge_range(row, 0, row, 5, labels['no_invoice_lines'], empty_format)
-                        row += 1
-                    for invoice_line in item['lines']:
-                        sheet.write(row, 0, invoice_line['name'], text_format)
-                        sheet.write_number(row, 1, invoice_line['quantity'], money_format)
-                        sheet.write(row, 2, invoice_line['uom'], text_format)
-                        sheet.write_number(row, 3, invoice_line['price_unit'], money_format)
-                        sheet.write_number(row, 4, invoice_line['discount'], money_format)
-                        sheet.write_number(row, 5, invoice_line['subtotal'], money_format)
-                        row += 1
             row += 2
 
         workbook.close()

@@ -241,12 +241,6 @@
                         font-size: 14px;
                         font-weight: 700;
                     }
-                    .al-fouad-notes {
-                        margin-top: 18px;
-                        font-size: 12px;
-                        line-height: 20px;
-                        min-height: 48px;
-                    }
                     .al-fouad-footer-pattern {
                         position: absolute;
                         left: -28px;
@@ -307,8 +301,9 @@
                     <table class="al-fouad-lines">
                         <thead>
                             <tr>
-                                <th style="width: 44%;">البيان</th>
-                                <th style="width: 12%;">الكمية</th>
+                                <th style="width: 34%;">البيان</th>
+                                <th style="width: 12%;">وحدة القياس</th>
+                                <th style="width: 10%;">الكمية</th>
                                 <th style="width: 14%;">السعر</th>
                                 <th style="width: 12%;">الضريبة</th>
                                 <th style="width: 18%;">الإجمالي</th>
@@ -318,6 +313,7 @@
                             <t t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
                                 <tr>
                                     <td><span t-field="line.name"/></td>
+                                    <td class="num"><span t-field="line.product_uom_id"/></td>
                                     <td class="num"><span t-field="line.quantity"/></td>
                                     <td class="num"><span t-field="line.price_unit"/></td>
                                     <td class="num"><span t-esc="', '.join(line.tax_ids.mapped('name'))"/></td>
@@ -363,10 +359,6 @@
                         </tr>
                     </table>
 
-                    <div class="al-fouad-notes" t-if="o.narration">
-                        <strong>ملاحظات:</strong>
-                        <div t-field="o.narration"/>
-                    </div>
                 </div>
 
                 <div class="al-fouad-footer-pattern"></div>
