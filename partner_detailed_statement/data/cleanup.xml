@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <delete model="ir.ui.view"
+            search="[('name', '=', 'account.move.form.statement.line.note')]"/>
+    <delete model="ir.model.data"
+            search="[('module', '=', 'partner_detailed_statement'),
+                     ('name', '=', 'view_move_form_statement_line_note')]"/>
+</odoo>

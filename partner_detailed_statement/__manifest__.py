@@ -16,6 +16,7 @@ linked payments, and running balance, with filters by date and partner.
     'depends': ['accounting_pdf_reports'],
     'data': [
         'security/ir.model.access.csv',
+        'data/cleanup.xml',
         'wizard/partner_detailed_statement_wizard.xml',
         'report/partner_detailed_statement_report.xml',
         'report/report.xml',
